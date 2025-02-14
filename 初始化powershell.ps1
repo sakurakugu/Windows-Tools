@@ -10,32 +10,45 @@ if ($env:OS -ne "Windows_NT") {
     return
 }
 $flag = 0
-# 如果当前编码是UTF-8，就将其改为GBK
-if (!(Get-Content -Path $Profile | Select-String -Pattern "chcp 936")) {
-    Add-Content $PROFILE @"
-# 设置Powershell在系统为UTF-8编码下显示中文
-chcp 936
-Clear-Host
 
-"@
-    Write-Host ("已将PowerShell " + (Get-Host | Select-Object -ExpandProperty Version).ToString() + "已设置为UTF-8编码下显示中文")
-    flag = 1
-}
 # 将where.exe设置一个默认别名为which
-if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias which where.exe")) {
+if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias which")) {
     Add-Content -Path $Profile -Value @"
 # 将where.exe设置一个默认别名为which
 Set-Alias which where.exe
 
 "@
     Write-Host ("已将where.exe设置一个默认别名为which")
-    flag = 1
+    $flag = 1
 }
+
+# 如果安装了git，就将git的bash设置一个默认别名为bash
+if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias bash")) {
+    $gitPath = (Get-Command git).Source
+    if ($gitPath -eq $null) {
+        Write-Host "未找到git的安装路径"
+        return
+    }
+    $bashPath = $gitPath -replace "cmd\git.exe", "bin\bash.exe"
+    if (Test-Path $bashPath) {
+        Add-Content -Path $Profile -Value @"
+# 将git的bash设置一个默认别名为bash
+Set-Alias bash `"$bashPath`"
+
+"@
+        Write-Host ("已将git的bash设置一个默认别名为bash")
+        $flag = 1
+    } else {
+        Write-Host "未找到git的bash路径"
+    }
+}
+
+
 
 # 输出最后的提示语
 if ($flag -eq 0) {
-    Write-Host "请重新打开Powershell窗口生效。"
+    Write-Host "未修改任何内容。"
 }
 else {
-    Write-Host "已全部设置，未修改任何内容。"
+    Write-Host "请重新打开Powershell窗口生效。"
 }
