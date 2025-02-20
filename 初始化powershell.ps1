@@ -23,25 +23,26 @@ Set-Alias which where.exe
 }
 
 # 如果安装了git，就将git的bash设置一个默认别名为bash
-if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias bash")) {
-    $gitPath = (Get-Command git).Source
-    if ($gitPath -eq $null) {
-        Write-Host "未找到git的安装路径"
-        return
-    }
-    $bashPath = $gitPath -replace "cmd\git.exe", "bin\bash.exe"
-    if (Test-Path $bashPath) {
-        Add-Content -Path $Profile -Value @"
-# 将git的bash设置一个默认别名为bash
-Set-Alias bash `"$bashPath`"
+# 并且没有安装wsl、cygwin等其他bash
+# if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias bash")) {
+#     $gitPath = (Get-Command git).Source
+#     if ($gitPath -eq $null) {
+#         Write-Host "未找到git的安装路径"
+#         return
+#     }
+#     $bashPath = $gitPath -replace "cmd\git.exe", "bin\bash.exe"
+#     if (Test-Path $bashPath) {
+#         Add-Content -Path $Profile -Value @"
+# # 将git的bash设置一个默认别名为bash
+# Set-Alias bash `"$bashPath`"
 
-"@
-        Write-Host ("已将git的bash设置一个默认别名为bash")
-        $flag = 1
-    } else {
-        Write-Host "未找到git的bash路径"
-    }
-}
+# "@
+#         Write-Host ("已将git的bash设置一个默认别名为bash")
+#         $flag = 1
+#     } else {
+#         Write-Host "未找到git的bash路径"
+#     }
+# }
 
 
 
