@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+# win10等没试过，理论上也可以用
+
+>>>>>>> 845d4a8d17c9e9dc71612f8b77c6d1798e8f9474
 # 接受一个字符 y是添加，n是取消，d是删除(默认)，x是关闭，其他是无效
 $regPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Search"
 # 提示语
