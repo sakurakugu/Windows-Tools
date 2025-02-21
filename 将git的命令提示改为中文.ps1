@@ -6,11 +6,12 @@ if ($gitPath) {
     cd ".\git中文翻译"
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/git/git/master/po/zh_CN.po" -OutFile "zh_CN.po"
 
+# todo：https://github.com/mlocati/gettext-iconv-windows/
     # 如果没用安装msgfmt，需要安装gettext
-    if (!(Get-Command msgfmt -ErrorAction SilentlyContinue)) {
-        echo "尚未安装`“翻译文件格式转换工具GetText`”，正在安装......"
-        winget install --id mlocati.GetText --source winget
-    }
+    # if (!(Get-Command msgfmt -ErrorAction SilentlyContinue)) {
+    #     echo "尚未安装`“翻译文件格式转换工具GetText`”，正在安装......"
+    #     winget install --id mlocati.GetText --source winget
+    # }
 
     # 将zh_CN.po文件转换为git.mo文件
     msgfmt -o ".\git.mo" ".\zh_CN.po"
