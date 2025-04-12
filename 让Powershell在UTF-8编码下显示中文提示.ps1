@@ -29,7 +29,8 @@ if (检测是否要添加) {
         $versionInfo = "# 设置PowerShell 7在系统为UTF-8编码下显示中文"
         $printInfo = PowerShell $($PSVersionTable.PSVersion)
     } else {
-        $versionInfo = "# 设置PowerShell 5在系统为UTF-8编码下显示中文"
+        $versionInfo = "# 设置PowerShell 5在系
+        统为UTF-8编码下显示中文"
         $printInfo = PowerShell $($PSVersionTable.PSVersion.Major).$($PSVersionTable.PSVersion.Minor)
     }
 
