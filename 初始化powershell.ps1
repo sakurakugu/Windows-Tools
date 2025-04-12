@@ -4,7 +4,7 @@ if (-not (Test-Path $PROFILE)) {
     New-Item -Type File -Path $PROFILE -Force
 }
 
-#如果在windows下
+#如果不在windows下
 if ($env:OS -ne "Windows_NT") {
     Write-Host "该脚本仅在windows下有效"
     return
