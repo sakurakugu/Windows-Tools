@@ -1,7 +1,7 @@
 $gitPath = (Get-Command git).Source
 if ($gitPath) {
     # 下载 Git 中文翻译文件
-    cd $env:USERPROFILE
+    cd $env:TEMP
     mkdir "git中文翻译" -Force
     cd ".\git中文翻译"
     Invoke-WebRequest -Uri "https://raw.githubusercontent.com/git/git/master/po/zh_CN.po" -OutFile "zh_CN.po"
@@ -19,7 +19,7 @@ if ($gitPath) {
     # 放置中文翻译文件
     $gitDir = Split-Path -Parent $gitPath
     mkdir "$gitDir\..\mingw64\share\locale\zh_CN\LC_MESSAGES"  -Force
-    cp "$env:USERPROFILE\git中文翻译\git.mo" "$gitDir\..\mingw64\share\locale\zh_CN\LC_MESSAGES\git.mo" -Force
+    cp "$env:TEMP\git中文翻译\git.mo" "$gitDir\..\mingw64\share\locale\zh_CN\LC_MESSAGES\git.mo" -Force
 
     # 删除中间文件
     echo "正在删除中间文件......"
@@ -35,8 +35,3 @@ if ($gitPath) {
 else {
     Write-Host "未找到 Git 安装路径，请确保 Git 已安装并在系统路径中。"
 }
-
-
-
-    
-
