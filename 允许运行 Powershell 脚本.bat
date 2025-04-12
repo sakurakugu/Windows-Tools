@@ -1,21 +1,13 @@
-@REM è¯¥è„šæœ¬ç”¨äºå…è®¸è¿è¡Œps1è„šæœ¬
-
+@REM ¸Ã½Å±¾ÓÃÓÚÔÊĞíÔËĞĞps1½Å±¾
 @echo off
-@REM æ£€æµ‹å¹¶è®¾ç½®å­—ç¬¦ç¼–ç 
-for /f "tokens=2 delims=:" %%a in ('chcp') do set cp=%%a
-set cp=%cp: =%
-if "%cp%"=="936" (
-    chcp 936 >nul
-) else (
-    chcp 65001 >nul
-)
+chcp 936 >nul
 
-@REM è¾“å‡ºåŸå…ˆçš„æ‰§è¡Œç­–ç•¥ï¼Œè®¾ç½®å½“å‰çš„æ‰§è¡Œç­–ç•¥ï¼ŒæŸ¥çœ‹å½“å‰çš„æ‰§è¡Œç­–ç•¥
+@REM Êä³öÔ­ÏÈµÄÖ´ĞĞ²ßÂÔ£¬ÉèÖÃµ±Ç°µÄÖ´ĞĞ²ßÂÔ£¬²é¿´µ±Ç°µÄÖ´ĞĞ²ßÂÔ
 powershell -Command ^
     "$policy = Get-ExecutionPolicy -Scope CurrentUser; " ^
-    "Write-Output ('åŸå…ˆçš„æ‰§è¡Œç­–ç•¥ï¼š' + $policy); " ^
+    "Write-Output (\"Ô­ÏÈµÄÖ´ĞĞ²ßÂÔ£º\" + $policy); " ^
     "Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force; " ^
     "$policy = Get-ExecutionPolicy -Scope CurrentUser; " ^
-    "Write-Output ('å·²ä¿®æ”¹æ‰§è¡Œç­–ç•¥' + [Environment]::NewLine + 'å½“å‰çš„æ‰§è¡Œç­–ç•¥ï¼š' + $policy + [Environment]::NewLine)"
+    "Write-Output (\"ÒÑĞŞ¸ÄÖ´ĞĞ²ßÂÔ`nµ±Ç°µÄÖ´ĞĞ²ßÂÔ£º\" + $policy + \"`n\")"
 
 pause
