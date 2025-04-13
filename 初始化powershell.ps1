@@ -1,50 +1,50 @@
 # 初始化我的powershell环境
 
-if (-not (Test-Path $PROFILE)) {
-    New-Item -Type File -Path $PROFILE -Force
-}
-
-#如果不在windows下
-if ($env:OS -ne "Windows_NT") {
-    Write-Host "该脚本仅在windows下有效"
+# 该脚本只在win下运行
+if($env:OS -ne "Windows_NT") {
+    Write-Host ("该脚本只在Windows下运行。")
     return
 }
+
+# $Profile是否存在，如果不存在则创建
+if(!(Test-Path -Path $Profile)) {
+    New-Item -ItemType File -Path $Profile -Force
+}
+
 $flag = 0
+$init_text = Get-Content -Path $Profile
+
+function 检测是否存在([string]$text) {
+    # 去除$text前后的所有空格
+    $text = $text.Trim()
+
+    foreach ($line in $init_text) {
+        if ($line -match '^(?!\s*#).*?' + $text) {
+            return $true
+        }
+    }
+    $flag = 1
+    return $false
+}
+
+function 检测Profile最后一行是否空() {
+    # 如果文件不为空，并且最后一行不是空行，则添加一个空行
+    if ($init_text.Count -gt 0 -and $init_text[-1].Trim() -ne "") {
+        Add-Content -Path $Profile -Value ""
+    }
+}
 
 # 将where.exe设置一个默认别名为which
-if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias which")) {
-    Add-Content -Path $Profile -Value @"
-# 将where.exe设置一个默认别名为which
-Set-Alias which where.exe
+# 检测是否存在"Set-Alias which"
+if(!(检测是否存在('Set-Alias\s+which'))) {
+    检测Profile最后一行是否空
+    Add-Content -Path $Profile -Value '# 将where.exe设置一个默认别名为which'
+    Add-Content -Path $Profile -Value 'Set-Alias which where.exe'
+    Add-Content -Path $Profile -Value ''
 
-"@
     Write-Host ("已将where.exe设置一个默认别名为which")
     $flag = 1
 }
-
-# 如果安装了git，就将git的bash设置一个默认别名为bash
-# 并且没有安装wsl、cygwin等其他bash
-# if(!(Get-Content -Path $Profile | Select-String -Pattern "Set-Alias bash")) {
-#     $gitPath = (Get-Command git).Source
-#     if ($gitPath -eq $null) {
-#         Write-Host "未找到git的安装路径"
-#         return
-#     }
-#     $bashPath = $gitPath -replace "cmd\git.exe", "bin\bash.exe"
-#     if (Test-Path $bashPath) {
-#         Add-Content -Path $Profile -Value @"
-# # 将git的bash设置一个默认别名为bash
-# Set-Alias bash `"$bashPath`"
-
-# "@
-#         Write-Host ("已将git的bash设置一个默认别名为bash")
-#         $flag = 1
-#     } else {
-#         Write-Host "未找到git的bash路径"
-#     }
-# }
-
-
 
 # 输出最后的提示语
 if ($flag -eq 0) {
@@ -53,3 +53,6 @@ if ($flag -eq 0) {
 else {
     Write-Host "请重新打开Powershell窗口生效。"
 }
+
+echo ""
+cmd /c pause

@@ -18,3 +18,6 @@ foreach ($type in $imageTypes) {
 }
 
 Write-Host "转换完成" -ForegroundColor Green
+
+echo ""
+cmd /c pause

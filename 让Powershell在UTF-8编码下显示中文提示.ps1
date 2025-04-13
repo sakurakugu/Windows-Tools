@@ -1,9 +1,8 @@
-# 在UTF-8格式下，如系统语言为英文等，无法正常显示中文，可使用此脚本解决
-
+# 在UTF-8格式下，或系统语言为英文等，无法正常显示中文，可使用此脚本解决
 
 # 该脚本只在win下运行
 if($env:OS -ne "Windows_NT") {
-    Write-Host ("PowerShell $ps_Info" + "该脚本只在Windows下运行。")
+    Write-Host ("该脚本只在Windows下运行。")
     return
 }
 
@@ -26,12 +25,29 @@ function 检测是否要添加() {
         Write-Host ("$ps_Info" + "本身就为中文GB2312编码，无需重复设置。")
         return $false
     }
-    # 检测是否已设置了，如果没设置则设置
-    if ((!(Get-Content -Path $Profile | Select-String -Pattern "[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(`"gb2312`")"))) {
+
+    function 检测是否已设置() {
+        foreach ($line in Get-Content -Path $Profile) {
+            if ($line -match '^(?!\s*#).*?\[Console\]::OutputEncoding\s*=\s*\[System\.Text\.Encoding\]::GetEncoding\(\s*"gb2312"\s*\)') {
+                return $true
+            }
+        }
+        return $false
+    }
+
+    if (检测是否已设置) {
         Write-Host ("$ps_Info" + "已设置为使用中文GB2312编码，无需重复设置。")
         return $false
     } else {
         return $true
+    }
+}
+
+function 检测Profile最后一行是否空() {
+    $lines = Get-Content -Path $Profile
+    # 如果文件不为空，并且最后一行不是空行，则添加一个空行
+    if ($lines.Count -gt 0 -and $lines[-1].Trim() -ne "") {
+        Add-Content -Path $Profile -Value ""
     }
 }
 
@@ -40,6 +56,7 @@ if (检测是否要添加) {
     $versionInfo = "# 设置"+$ps_Info+"在系统为UTF-8编码下显示中文"
     $profileContent = "[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding(`"gb2312`")"
 
+    检测Profile最后一行是否空
     Add-Content -Path $Profile -Value $versionInfo
     Add-Content -Path $Profile -Value $profileContent
     Add-Content -Path $Profile -Value ""
@@ -47,14 +64,5 @@ if (检测是否要添加) {
     Write-Host ("已将 $ps_Info" + "设置为使用中文GB2312编码，请重新打开Powershell窗口生效。")
 }
 
-# 10秒倒计时或任意键退出
-Write-Host ("`n请按任意键继续...")
-$timeout = 10
-$start = Get-Date
-while (((Get-Date) - $start).TotalSeconds -lt $timeout) {
-    if ($Host.UI.RawUI.KeyAvailable) {
-        $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-        break
-    }
-    Start-Sleep -Milliseconds 100
-}
+echo ""
+cmd /c pause

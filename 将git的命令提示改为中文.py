@@ -1,9 +1,10 @@
 import os
 import sys
 import time
-import shutil
-import urllib.request
 import msvcrt
+import shutil
+import subprocess
+import urllib.request
 from tqdm import tqdm
 
 def main():
@@ -16,8 +17,8 @@ def main():
     try:
         import polib
     except ImportError:
-        print(f"\033未安装 polib 库，请输入 \"pip install polib\" 命令以安装\033[0m")
-        sys.exit(1)
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "polib"])
+        import polib
     
     # 获取 git 安装路径
     git_路径 = shutil.which("git")
@@ -74,17 +75,8 @@ def main():
         print(f"\033[31m复制文件失败: {e}\033[0m")
         sys.exit(1)
     
-    # 10秒倒计时或任意键退出
-    print("\n请按任意键继续...", end="", flush=True)
-    退出时间 = 10
-    开始时间 = time.time()
-    while True:
-        if msvcrt.kbhit():
-            msvcrt.getch()  # 获取按下的键
-            break
-        if time.time() - 开始时间 > 退出时间:
-            break
-        time.sleep(0.1)
+    print()
+    os.system("pause")
 
 if __name__ == "__main__":
     main()
